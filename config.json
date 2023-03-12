@@ -1,0 +1,7 @@
+{
+    "intervalMin":2,
+    "checkMin":1,
+    "checkActive":true,
+    "launchBackup":true,
+    "saveDirectory":"./backup"
+}

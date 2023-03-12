@@ -1,0 +1,21 @@
+{
+    "name": "syosin-backup",
+    "version": "1.0.1",
+    "description": "backup plugin",
+    "main": "index.js",
+    "keywords": [],
+    "author": "kaito02020424",
+    "license": "MIT",
+    "bdsxPlugin": true,
+    "scripts": {
+        "build": "tsc",
+        "watch": "tsc -w",
+        "prepare": "tsc || exit 0"
+    },
+    "devDependencies": {
+        "bdsx": "file:../bdsx"
+    },
+    "dependencies": {
+        "adm-zip": "^0.5.10"
+    }
+}
