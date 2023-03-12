@@ -67,7 +67,7 @@ function backup() {
     lasttime = date.getTime() / 1000;
     try {
         zip.addLocalFolder(path.resolve(__dirname, "../../bedrock_server/worlds/Bedrock level"))
-        zip.writeZip(`${path.resolve(__dirname, config.saveDirectory)}/${date.getFullYear() - date.getMonth() + 1}-${date.getDate()}-${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}.zip`, (err) => {
+        zip.writeZip(`${path.resolve(__dirname, config.saveDirectory)}/${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}-${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}.zip`, (err) => {
             if (err) {
                 console.log(`[BDSX-Backup] ERROR! Error Log:\n${err}`);
                 return;
