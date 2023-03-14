@@ -49,11 +49,11 @@ const backups = setInterval(() => {
     if(!afterOpen) {
         clearInterval(backups);
     } else {
-        if(date().getTime() / 1000 - lasttime >= config.intervalMin * 60 && (!config.checkActive || (config.checkActive && status))) {
+        if(date() / 1000 - lasttime >= config.intervalMin * 60 && (!config.checkActive || (config.checkActive && status))) {
             launcher.bedrockServer.executeCommand("save hold", cr.CommandResultType.Data);
             startBackupLog();
         } else {
-            console.log(`[BDSX-Backup] SKip Backup (${config.intervalMin * 60 - (date().getTime) / 1000 - lasttime} second left)`);
+            console.log(`[BDSX-Backup] SKip Backup (${Math.round(config.intervalMin * 60 - (date().getTime() / 1000 - lasttime))} seconds left)`);
         }
     }
 }, config.checkMin * 60000)
@@ -72,10 +72,6 @@ const check = setInterval(() => {
 
 
 //Functions
-function date() {
-    return new Date()
-}
-
 function startBackupLog() {
     console.log(`${pluginName}: Start Backup...`);
     for(const player of launcher.bedrockServer.serverInstance.getPlayers()) {
@@ -91,8 +87,8 @@ function finishBackupLog() {
     launcher.bedrockServer.executeCommand("save resume", cr.CommandResultType.Data);
 }
 
-function backup() {
-    lasttime = date().getTime() / 1000;
+async function backup() {
+    lasttime = Math.round(date() / 1000);
     try {
         zip.addLocalFolder(path.resolve(__dirname, `../../bedrock_server/worlds/${config.WorldName}`));
         zip.writeZip(`${path.resolve(__dirname, config.saveDirectory)}/${date().getFullYear()}-${date().getMonth() + 1}-${date().getDate()}-${date().getHours()}-${date().getMinutes()}-${date().getSeconds()}.zip`, (err) => {
@@ -100,7 +96,6 @@ function backup() {
                 console.log(`${pluginName}: Error log:\n${err}`);
                 return;
             } else {
-                lasttime = date().getTime / 1000;
                 if(launcher.bedrockServer.serverInstance.getPlayers().length == 0) {
                     status = false;
                 } else {
@@ -113,4 +108,8 @@ function backup() {
     } catch(err) {
         console.log(`${pluginName}: Error Log:\n${err}`);
     }
+}
+
+function date() {
+    return new Date()
 }
