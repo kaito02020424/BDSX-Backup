@@ -25,7 +25,7 @@ const pluginName = `[BDSX-Backup]`
 //Events
 event.events.serverOpen.on(() => {
     afterOpen = true;
-    if(config.launchBackup) {
+    if (config.launchBackup) {
         launcher.bedrockServer.executeCommand("save hold", cr.CommandResultType.Data);
         startBackupLog();
     }
@@ -46,10 +46,10 @@ event.events.serverLeave.on(async () => {
 
 //Variable
 const backups = setInterval(() => {
-    if(!afterOpen) {
+    if (!afterOpen) {
         clearInterval(backups);
     } else {
-        if(date() / 1000 - lasttime >= config.intervalMin * 60 && (!config.checkActive || (config.checkActive && status))) {
+        if (date() / 1000 - lasttime >= config.intervalMin * 60 && (!config.checkActive || (config.checkActive && status))) {
             launcher.bedrockServer.executeCommand("save hold", cr.CommandResultType.Data);
             startBackupLog();
         } else {
@@ -59,10 +59,10 @@ const backups = setInterval(() => {
 }, config.checkMin * 60000)
 
 const check = setInterval(() => {
-    if(!afterOpen) return;
-    if(backupLock) return;
+    if (!afterOpen) return;
+    if (backupLock) return;
     const cmd = launcher.bedrockServer.executeCommand("save query", cr.CommandResultType.Data);
-    if(cmd.data.statusCode === 0) {
+    if (cmd.data.statusCode === 0) {
         console.log(cmd.data.statusMessage);
         backupLock = true;
         backup();
@@ -74,14 +74,14 @@ const check = setInterval(() => {
 //Functions
 function startBackupLog() {
     console.log(`${pluginName}: Start Backup...`);
-    for(const player of launcher.bedrockServer.serverInstance.getPlayers()) {
+    for (const player of launcher.bedrockServer.serverInstance.getPlayers()) {
         player.sendMessage(`${pluginName}: Start Backup...`);
     }
 }
 
 function finishBackupLog() {
     console.log(`${pluginName}: Finish Backup!`);
-    for(const player of launcher.bedrockServer.serverInstance.getPlayers()) {
+    for (const player of launcher.bedrockServer.serverInstance.getPlayers()) {
         player.sendMessage(`${pluginName}: Finish Backup!`);
     }
     launcher.bedrockServer.executeCommand("save resume", cr.CommandResultType.Data);
@@ -92,11 +92,11 @@ async function backup() {
     try {
         zip.addLocalFolder(path.resolve(__dirname, `../../bedrock_server/worlds/${config.WorldName}`));
         zip.writeZip(`${path.resolve(__dirname, config.saveDirectory)}/${date().getFullYear()}-${date().getMonth() + 1}-${date().getDate()}-${date().getHours()}-${date().getMinutes()}-${date().getSeconds()}.zip`, (err) => {
-            if(err) {
+            if (err) {
                 console.log(`${pluginName}: Error log:\n${err}`);
                 return;
             } else {
-                if(launcher.bedrockServer.serverInstance.getPlayers().length == 0) {
+                if (launcher.bedrockServer.serverInstance.getPlayers().length == 0) {
                     status = false;
                 } else {
                     status = true;
@@ -105,7 +105,7 @@ async function backup() {
                 backupLock = false;
             }
         })
-    } catch(err) {
+    } catch (err) {
         console.log(`${pluginName}: Error Log:\n${err}`);
     }
 }
