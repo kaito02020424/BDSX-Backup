@@ -14,7 +14,7 @@ const config = require(`./config.json`);
 
 
 //Settings
-let lasttime = 0;
+let lastTime = 0;
 let status = false;
 let backupLock = false;
 let afterOpen = false;
@@ -49,11 +49,11 @@ const backups = setInterval(() => {
     if (!afterOpen) {
         clearInterval(backups);
     } else {
-        if (date() / 1000 - lasttime >= config.intervalMin * 60 && (!config.checkActive || (config.checkActive && status))) {
+        if (date().getTime() / 1000 - lastTime >= config.intervalMin * 60 && (!config.checkActive || (config.checkActive && status))) {
             launcher.bedrockServer.executeCommand("save hold", cr.CommandResultType.Data);
             startBackupLog();
         } else {
-            console.log(`[BDSX-Backup] SKip Backup (${Math.round(config.intervalMin * 60 - (date().getTime() / 1000 - lasttime))} seconds left)`);
+            console.log(`[BDSX-Backup] SKip Backup (${Math.round(config.intervalMin * 60 - (date().getTime() / 1000 - lastTime))} seconds left)`);
         }
     }
 }, config.checkMin * 60000)
@@ -88,7 +88,7 @@ function finishBackupLog() {
 }
 
 async function backup() {
-    lasttime = Math.round(date() / 1000);
+    lastTime = date().getTime() / 1000;
     try {
         zip.addLocalFolder(path.resolve(__dirname, `../../bedrock_server/worlds/${config.WorldName}`));
         zip.writeZip(`${path.resolve(__dirname, config.saveDirectory)}/${date().getFullYear()}-${date().getMonth() + 1}-${date().getDate()}-${date().getHours()}-${date().getMinutes()}-${date().getSeconds()}.zip`, (err) => {
