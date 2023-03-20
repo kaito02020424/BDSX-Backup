@@ -3,5 +3,6 @@
     "checkMin":1,
     "checkActive":true,
     "launchBackup":true,
-    "saveDirectory":"./backup"
+    "saveDirectory":"./backup",
+    "WorldName": "Bedrock level"
 }
