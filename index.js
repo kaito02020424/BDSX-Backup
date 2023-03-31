@@ -103,7 +103,6 @@ async function backup() {
             }
         })
         zip = null;
-        console.log(zip);
     } catch (err) {
         if (launcher.bedrockServer.serverInstance.getPlayers().length == 0) {
             status = false;
