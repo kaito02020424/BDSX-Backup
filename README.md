@@ -1,5 +1,6 @@
-# BDSX-Backup
-
-
-# Original repository
-https://github.com/kaito02020424/BDSX-Backup
+# BDSX-Backup  
+### 日本語  
+BDSXのバックアッププラグインです。  
+  
+config.json弄ればすぐに使えます。  
+詳しい説明はまた書きます。  
