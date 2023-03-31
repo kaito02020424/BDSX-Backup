@@ -4,8 +4,6 @@ const event = require(`bdsx/event`);
 const launcher = require(`bdsx/launcher`);
 const cr = require(`bdsx/commandresult`);
 const admZip = require(`adm-zip`);
-const zip = new admZip();
-
 
 
 //Json files
@@ -46,15 +44,13 @@ event.events.serverLeave.on(async () => {
 
 //Variable
 const backups = setInterval(() => {
-    if (!afterOpen) {
-        clearInterval(backups);
+    if (!afterOpen) return;
+    if (backupLock) return;
+    if (date().getTime() / 1000 - lastTime >= config.intervalMin * 60 && (!config.checkActive || (config.checkActive && status))) {
+        launcher.bedrockServer.executeCommand("save hold", cr.CommandResultType.Data);
+        startBackupLog();
     } else {
-        if (date().getTime() / 1000 - lastTime >= config.intervalMin * 60 && (!config.checkActive || (config.checkActive && status))) {
-            launcher.bedrockServer.executeCommand("save hold", cr.CommandResultType.Data);
-            startBackupLog();
-        } else {
-            console.log(`[BDSX-Backup] SKip Backup (${Math.round(config.intervalMin * 60 - (date().getTime() / 1000 - lastTime))} seconds left)`);
-        }
+        console.log(`[BDSX-Backup] SKip Backup (${Math.round(config.intervalMin * 60 - (date().getTime() / 1000 - lastTime))} seconds left)`);
     }
 }, config.checkMin * 60000)
 
@@ -88,6 +84,7 @@ function finishBackupLog() {
 }
 
 async function backup() {
+    let zip = new admZip();
     lastTime = date().getTime() / 1000;
     try {
         zip.addLocalFolder(path.resolve(__dirname, `../../bedrock_server/worlds/${config.WorldName}`));
@@ -105,8 +102,17 @@ async function backup() {
                 backupLock = false;
             }
         })
+        zip = null;
+        console.log(zip);
     } catch (err) {
+        if (launcher.bedrockServer.serverInstance.getPlayers().length == 0) {
+            status = false;
+        } else {
+            status = true;
+        }
+        finishBackupLog();
         console.log(`${pluginName}: Error Log:\n${err}`);
+        backupLock = false;
     }
 }
 
