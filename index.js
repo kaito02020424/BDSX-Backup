@@ -91,6 +91,8 @@ async function backup() {
         zip.writeZip(`${path.resolve(__dirname, config.saveDirectory)}/${date().getFullYear()}-${date().getMonth() + 1}-${date().getDate()}-${date().getHours()}-${date().getMinutes()}-${date().getSeconds()}.zip`, (err) => {
             if (err) {
                 console.log(`${pluginName}: Error log:\n${err}`);
+                finishBackupLog();
+                zip = null;
                 return;
             } else {
                 if (launcher.bedrockServer.serverInstance.getPlayers().length == 0) {
@@ -104,11 +106,6 @@ async function backup() {
         })
         zip = null;
     } catch (err) {
-        if (launcher.bedrockServer.serverInstance.getPlayers().length == 0) {
-            status = false;
-        } else {
-            status = true;
-        }
         finishBackupLog();
         console.log(`${pluginName}: Error Log:\n${err}`);
         backupLock = false;
