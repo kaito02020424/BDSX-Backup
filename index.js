@@ -5,6 +5,8 @@ const launcher = require(`bdsx/launcher`);
 const cr = require(`bdsx/commandresult`);
 const admZip = require(`adm-zip`);
 
+//Import apis
+const {backupApi} = require("./api");
 
 //Json files
 const config = require(`./config.json`);
@@ -69,6 +71,7 @@ const check = setInterval(() => {
 
 //Functions
 function startBackupLog() {
+    backupApi.emit("startBackup");
     console.log(`${pluginName}: Start Backup...`);
     for (const player of launcher.bedrockServer.serverInstance.getPlayers()) {
         player.sendMessage(`${pluginName}: Start Backup...`);
@@ -76,6 +79,7 @@ function startBackupLog() {
 }
 
 function finishBackupLog() {
+    backupApi.emit("finishBackup");
     console.log(`${pluginName}: Finish Backup!`);
     for (const player of launcher.bedrockServer.serverInstance.getPlayers()) {
         player.sendMessage(`${pluginName}: Finish Backup!`);
