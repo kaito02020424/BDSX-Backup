@@ -5,12 +5,6 @@ const launcher = require(`bdsx/launcher`);
 const cr = require(`bdsx/commandresult`);
 const admZip = require(`adm-zip`);
 
-//debug
-const log = require("why-is-node-running")
-const zl = require("zip-lib");
-
-
-
 //Import apis
 const { backupApi } = require("./api");
 
