@@ -5,8 +5,14 @@ const launcher = require(`bdsx/launcher`);
 const cr = require(`bdsx/commandresult`);
 const admZip = require(`adm-zip`);
 
+//debug
+const log = require("why-is-node-running")
+const zl = require("zip-lib");
+
+
+
 //Import apis
-const {backupApi} = require("./api");
+const { backupApi } = require("./api");
 
 //Json files
 const config = require(`./config.json`);
@@ -40,6 +46,8 @@ event.events.serverLeave.on(async () => {
     afterOpen = false;
     backupLock = true;
     console.log(`${pluginName}: Stop`);
+    zl=null;
+    log()
 })
 
 
@@ -90,11 +98,13 @@ function finishBackupLog() {
 async function backup() {
     let zip = new admZip();
     lastTime = date().getTime() / 1000;
-    try {
-        zip.addLocalFolder(path.resolve(__dirname, `../../bedrock_server/worlds/${config.WorldName}`));
-        zip.writeZip(`${path.resolve(__dirname, config.saveDirectory)}/${date().getFullYear()}-${date().getMonth() + 1}-${date().getDate()}-${date().getHours()}-${date().getMinutes()}-${date().getSeconds()}.zip`, (err) => {
-            if (err) {
-                console.log(`${pluginName}: Error log:\n${err}`);
+    zip.addLocalFolderPromise(path.resolve(__dirname, `../../bedrock_server/worlds/${config.WorldName}`))
+        .then(() => {
+            return zip.writeZipPromise(`${path.resolve(__dirname, config.saveDirectory)}/${date().getFullYear()}-${date().getMonth() + 1}-${date().getDate()}-${date().getHours()}-${date().getMinutes()}-${date().getSeconds()}.zip`)
+        })
+        .then((err) => {
+            if (!err) {
+                console.log(`${pluginName}: Error!`);
                 finishBackupLog();
                 zip = null;
                 return;
@@ -108,12 +118,15 @@ async function backup() {
                 backupLock = false;
             }
         })
-        zip = null;
-    } catch (err) {
-        finishBackupLog();
-        console.log(`${pluginName}: Error Log:\n${err}`);
-        backupLock = false;
-    }
+        .catch((reason) => {
+            finishBackupLog();
+            console.log(`${pluginName}: Error Log:\n${reason}`);
+            backupLock = false;
+        })
+        .finally(() => {
+            zip = null;
+        })
+    
 }
 
 function date() {
