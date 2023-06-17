@@ -40,8 +40,6 @@ event.events.serverLeave.on(async () => {
     afterOpen = false;
     backupLock = true;
     console.log(`${pluginName}: Stop`);
-    zl=null;
-    log()
 })
 
 
