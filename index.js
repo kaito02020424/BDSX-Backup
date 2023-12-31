@@ -91,7 +91,7 @@ async function backup() {
     let zip = new admZip();
     lastTime = date().getTime() / 1000;
     try {
-        zip.addLocalFolder(path.resolve(__dirname, `../../bedrock_server/worlds/${config.WorldName}`));
+        zip.addLocalFolder(path.resolve(__dirname, `../../../bedrock_server/worlds/${config.WorldName}`));
         zip.writeZip(`${path.resolve(__dirname, config.saveDirectory)}/${date().getFullYear()}-${date().getMonth() + 1}-${date().getDate()}-${date().getHours()}-${date().getMinutes()}-${date().getSeconds()}.zip`, (err) => {
             if (err) {
                 console.log(`${pluginName}: Error log:\n${err}`);
